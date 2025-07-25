@@ -11,7 +11,7 @@
  * along with this software (see the LICENSE.md file). If not, see
  * <http://creativecommons.org/publicdomain/zero/1.0/>.
  */
-package dav-server
+package davserver
 
 import groovy.transform.CompileStatic
 import org.moqui.context.ExecutionContext
@@ -19,8 +19,8 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 @CompileStatic
-final class dav-server {
-    protected final static Logger logger = LoggerFactory.getLogger(dav-server.class)
+final class davserver {
+    protected final static Logger logger = LoggerFactory.getLogger(davserver.class)
 
     /**
      * Execution context used to access facades.
@@ -30,10 +30,10 @@ final class dav-server {
     /**
      * Initializes a new {@code dav-server}.
      */
-    dav-server(ExecutionContext ec) {
+    davserver(ExecutionContext ec) {
         this.ec = ec
 
-        ec.logger.info("Starting dav-server component");
+        ec.logger.info("Starting davserver component")
     }
 }
 
