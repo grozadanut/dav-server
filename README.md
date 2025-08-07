@@ -62,7 +62,7 @@ sections of this document:
 - lockdiscovery(optional) ❌
 - supportedlock(optional) ❌
 
-### [WebDAV ACL RFC 3744](https://datatracker.ietf.org/doc/html/rfc3744) ⏳🇼🇮🇵
+### [WebDAV ACL RFC 3744](https://datatracker.ietf.org/doc/html/rfc3744) ❌
 
 **Privileges**
 - DAV:read ❌
@@ -107,6 +107,22 @@ sections of this document:
 - DAV:acl ❌
 - DAV:acl-restrictions(protected) ❌
 - DAV:inherited-acl-set(protected) ❌
+- DAV:principal-collection-set(protected) ❌
+
+**Existing methods modifications**
+- all HTTP methods: 403 Forbidden MUST contain <DAV:error>, which contains <DAV:need-privileges> ❌
+- OPTIONS: return `access-control` in DAV header ❌
+- MOVE: preserve non-inherited non-protected ACEs in the DAV:acl property ❌
+- COPY: DO NOT preserve DAV:acl ❌
+
+**Methods**
+- ACL ❌
+- REPORT [RFC 3253 section 3.6](https://datatracker.ietf.org/doc/html/rfc3253#section-3.6)
+  - DAV:expand-property [RFC 3253 section 3.8](https://datatracker.ietf.org/doc/html/rfc3253#section-3.8) ❌
+  - DAV:acl-principal-prop-set ❌
+  - DAV:principal-match ❌
+  - DAV:principal-property-search ❌
+  - DAV:principal-search-property-set ❌
 
 ### [CalDAV RFC 4791](https://datatracker.ietf.org/doc/html/rfc4791) ⏳🇼🇮🇵
 
@@ -120,7 +136,7 @@ object resource format; ❌
 - **MUST** support WebDAV Class 1 [RFC2518, Obsoleted by RFC 4918] (note that [rfc2518bis]
 describes clarifications to [RFC2518] that aid interoperability); ❌
 - **MUST** support WebDAV ACL [RFC3744] with the additional privilege
-defined in Section 6.1 of this document; ⏳🇼🇮🇵
+defined in Section 6.1 of this document; ❌
 - **MUST** support transport over TLS [RFC2246] as defined in [RFC2818]
 (note that [RFC2246] has been obsoleted by [RFC4346]); ❌
 - **MUST** support ETags [RFC2616] with additional requirements
@@ -136,6 +152,57 @@ In addition, a server:
 
 - **SHOULD** support the MKCALENDAR method defined in Section 5.3.1 of
 this document. ❌
+
+- property DAV:resourcetype = ❌
+  - DAV:collection
+  - CALDAV:calendar
+- OPTIONS
+  - DAV:calendar-access ❌
+
+**Calendar collection properties**
+- CALDAV:calendar-description (MAY) ❌
+- CALDAV:calendar-timezone (SHOULD) ❌
+- CALDAV:supported-calendar-component-set (MAY)(protected) ❌
+- CALDAV:supported-calendar-data (MAY)(protected) ❌
+- CALDAV:max-resource-size (MAY)(protected) ❌
+- CALDAV:min-date-time (MAY)(protected) ❌
+- CALDAV:max-date-time (MAY)(protected) ❌
+- CALDAV:max-instances (MAY)(protected) ❌
+- CALDAV:max-attendees-per-instance (MAY)(protected) ❌
+
+**Creating calendar resources**
+- PUT
+  - If-None-Match: * ❌
+
+**PUT, COPY, MOVE preconditions**
+- CALDAV:supported-calendar-data ❌
+- CALDAV:valid-calendar-data ❌
+- CALDAV:valid-calendar-object-resource ❌
+- CALDAV:supported-calendar-component ❌
+- CALDAV:no-uid-conflict ❌
+- CALDAV:calendar-collection-location-ok ❌
+- CALDAV:max-resource-size ❌
+- CALDAV:min-date-time ❌
+- CALDAV:max-date-time ❌
+- CALDAV:max-instances ❌
+- CALDAV:max-attendees-per-instance ❌
+
+**Privileges**
+- CALDAV:read-free-busy ❌
+
+**Principal property**
+- CALDAV:calendar-home-set ❌
+
+**Additional property**
+- CALDAV:supported-collation-set (protected) ❌
+  - i;ascii-casemap [RFC 4790 section 9.2](https://datatracker.ietf.org/doc/html/rfc4790#section-9.2)
+  - i;octet [RFC 4790 section 9.3](https://datatracker.ietf.org/doc/html/rfc4790#section-9.3)
+
+**Reports**
+- REPORT
+  - CALDAV:calendar-query ❌
+  - CALDAV:calendar-multiget ❌
+  - CALDAV:free-busy-query ❌
 
 ### CardDav ❌
 
