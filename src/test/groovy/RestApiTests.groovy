@@ -39,7 +39,7 @@ class RestApiTests extends Specification {
     }
 
     def cleanupSpec() {
-        long totalTime = System.currentTimeMillis() - screenTest.dav-serverTime
+        long totalTime = System.currentTimeMillis() - screenTest.startTime
         logger.info("Rendered ${screenTest.renderCount} screens (${screenTest.errorCount} errors) in ${ec.l10n.format(totalTime/1000, "0.000")}s, output ${ec.l10n.format(screenTest.renderTotalChars/1000, "#,##0")}k chars")
 
         ec.destroy()
@@ -76,6 +76,6 @@ class RestApiTests extends Specification {
         requestMethod | screenPath | parameters | containsTextList
 
         // Test dav-server Rest API here
-        // "put" | "s1/dav-server/exampleendpoint" | [moquiSessionToken:token] | ['55800']
+        "get" | "s1/dav-server" | [moquiSessionToken:token] | ['55800']
     }
 }

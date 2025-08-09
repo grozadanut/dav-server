@@ -20,7 +20,7 @@ import org.moqui.Moqui
 // NOTE: OrderTenantAccess.class temporarily removed, to be replaced with similar instance access functionality
 @Suite
 @SelectClasses([ RestApiTests.class ])
-class dav-serverSuite {
+class DavServerSuite {
     @AfterAll
     static void destroyMoqui() {
         Moqui.destroyActiveExecutionContextFactory()
