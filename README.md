@@ -1,21 +1,73 @@
 # WARNING!!! Status of this project is WORK IN PROGRESS
 
-## Description
+# Description
 
 The purpose of this project is to provide a CalDav and CardDav server implementation 
 in order to connect calendars and contacts to the Moqui backend.
 
 For information about the implementation status see the [Capabilities](#capabilities) section below.
 
-## Testing
+# Features
+
+- Personal Calendars for each user ⏳🇼🇮🇵
+- Group Calendars(eg: for meeting rooms or fixed assets) ❌
+- Public Calendars(eg: for holidays) ❌
+
+# Testing
 
 For testing the compliance with the RFC specification the following methods are used:
-1. [Caldav Tester](https://github.com/CalConnect/caldavtester) is used for automatic testing.
-2. [DAVx5](https://play.google.com/store/apps/details?id=at.bitfire.davdroid) and [Fossify Calendar](https://play.google.com/store/apps/details?id=org.fossify.calendar) are used as apps for manual testing on Android.
+1. [DAVx5](https://play.google.com/store/apps/details?id=at.bitfire.davdroid) and [Fossify Calendar](https://play.google.com/store/apps/details?id=org.fossify.calendar) are used as apps for manual testing on Android.
+2. Moqui Spock tests written based on the specification are used for automated testing.
 
-## Capabilities
+# Architecture
+## WebDAV
 
-### [WebDAV Class 1 RFC 4918](https://datatracker.ietf.org/doc/html/rfc4918) ❌
+WebDav collections are similar with directories in a file system, and resources are similar with files.
+
+### Data mapping
+
+WebDav collections are stored in `moqui.resource.DbResource`, using the following fields:
+- **resourceId:** autoincrement
+- **parentResourceId:** parent collection resourceId
+- **filename:** last part of the collection URL
+- **isFile:** false
+
+Collection dead properties are stored as:
+- `moqui.resource.DbResource`:
+  - **resourceId:** parentResourceId+"_dprop"
+  - **parentResourceId:** resourceId of collection
+  - **filename:** "dproperties.xml"
+  - **isFile:** true
+- `moqui.resource.DbResourceFile`:
+  - **resourceId:** DbResource.resourceId
+  - **mimeType:** "text/xml"
+  - **versionName:** null
+  - **rootVersionName:** null
+  - **fileData:** dead properties xml
+
+### Data statements
+
+
+
+## CalDAV
+
+To ensure preservation of unknown VCOMPONENT properties, the original .ics calendar resource is stored in the
+`mantle.work.effort.WorkEffortContent` entity as a resource. When requesting a calendar resource, the dav server uses 
+the iCal4j library to parse the .ics file and then overrides the known properties using WorkEffort fields.
+When storing an .ics calendar resource the server stores the .ics data as-is in the `WorkEffortContent` entity, and then 
+stores the known properties in the `WorkEffort` fields.
+
+### Data mapping
+
+
+
+### Data statements
+
+
+
+# Capabilities
+
+## [WebDAV Class 1 RFC 4918](https://datatracker.ietf.org/doc/html/rfc4918) ❌
 
 Class 1 compliant resources MUST return, at minimum, the value "1" in
 the DAV header on all responses to the OPTIONS method.
@@ -62,7 +114,7 @@ sections of this document:
 - lockdiscovery(optional) ❌
 - supportedlock(optional) ❌
 
-### [WebDAV ACL RFC 3744](https://datatracker.ietf.org/doc/html/rfc3744) ❌
+## [WebDAV ACL RFC 3744](https://datatracker.ietf.org/doc/html/rfc3744) ❌
 
 **Privileges**
 - DAV:read ❌
@@ -124,7 +176,7 @@ sections of this document:
   - DAV:principal-property-search ❌
   - DAV:principal-search-property-set ❌
 
-### [CalDAV RFC 4791](https://datatracker.ietf.org/doc/html/rfc4791) ⏳🇼🇮🇵
+## [CalDAV RFC 4791](https://datatracker.ietf.org/doc/html/rfc4791) ⏳🇼🇮🇵
 
 **Requirements Overview**
 
@@ -204,9 +256,9 @@ this document. ❌
   - CALDAV:calendar-multiget ❌
   - CALDAV:free-busy-query ❌
 
-### CardDav ❌
+## CardDav ❌
 
-### References
+## References
 
 - [WebDAV RFC 4918](https://datatracker.ietf.org/doc/html/rfc4918)
 - [WebDAV ACL RFC 3744](https://datatracker.ietf.org/doc/html/rfc3744)
