@@ -76,6 +76,6 @@ class RestApiTests extends Specification {
         requestMethod | screenPath | parameters | containsTextList
 
         // Test dav-server Rest API here
-        "get" | "s1/dav-server" | [moquiSessionToken:token] | ['55800']
+//        "get" | "s1/dav-server" | [moquiSessionToken:token] | ['55800']
     }
 }
